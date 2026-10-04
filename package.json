@@ -73,6 +73,7 @@
   },
   "scripts": {
     "dev": "node --env-file-if-exists=.env scripts/dev-with-automation.mjs",
+    "dev:research": "node --env-file-if-exists=.env scripts/dev-research-harness.mjs",
     "dev:static": "node --env-file-if-exists=.env scripts/dev-static.mjs",
     "dev:extra-backend": "node --env-file-if-exists=.env scripts/dev-extra-backend.mjs",
     "dev:minimal": "node --env-file-if-exists=.env scripts/dev-safe.mjs",
