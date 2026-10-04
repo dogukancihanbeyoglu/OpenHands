@@ -14,6 +14,11 @@ not a rewrite.
 - persistent OpenHands settings and conversation history
 - the research evidence registry, contracts, checkpoints, and six research roles
 
+When the sibling research SDK is installed, Canvas registers Director,
+Research Worker, Source Acquisition, Evidence Extractor, Falsifier, and
+Reviewer as OpenHands subagents during Agent Server startup. The import is
+optional, so the Canvas fork can still run against a released upstream SDK.
+
 ## Layout
 
 Keep the two forks next to each other:

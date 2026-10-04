@@ -156,3 +156,15 @@ register_tool("canvas_ui", CanvasUITool)
 # this once the SDK registers its builtins for remote conversations.
 if FinishTool.__name__ not in list_registered_tools():
     register_tool(FinishTool.__name__, FinishTool)
+
+
+# The research SDK fork provides six bounded subagents. Import them only when
+# that extension is present so this Canvas fork remains compatible with the
+# released OpenHands SDK as well.
+try:
+    from openhands.sdk.research import register_research_agents
+except ModuleNotFoundError as exc:
+    if exc.name != "openhands.sdk.research":
+        raise
+else:
+    register_research_agents()

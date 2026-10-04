@@ -43,4 +43,12 @@ describe("canvas_ui client tool", () => {
       'register_tool("canvas_ui", CanvasUITool)',
     );
   });
+
+  it("registers research roles when the research SDK extension is installed", () => {
+    expect(legacyToolSource).toContain(
+      "from openhands.sdk.research import register_research_agents",
+    );
+    expect(legacyToolSource).toContain("register_research_agents()");
+    expect(legacyToolSource).toContain('exc.name != "openhands.sdk.research"');
+  });
 });
