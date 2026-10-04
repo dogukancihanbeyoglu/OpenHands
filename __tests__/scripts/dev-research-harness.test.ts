@@ -75,7 +75,24 @@ describe("research harness launcher", () => {
     expect(dockerConfig.OH_CONVERSATION_IMAGE).toBe(
       "openhands-research-agent-server:local",
     );
+    expect(config.OH_CONVERSATION_CONTAINER_STARTUP_TIMEOUT).toBe("180");
+    expect(config.OH_CONVERSATION_IMAGE_HAS_BROWSER).toBe("true");
     expect(config.UV_PYTHON).toBe("3.13");
     expect(config.VITE_WORKING_DIR).toBe(workspace);
+  });
+
+  it("preserves an explicit Docker startup timeout", () => {
+    const { canvasRoot } = createCheckout();
+
+    const config = resolveResearchHarnessConfig({
+      env: {
+        OH_CONVERSATION_IMAGE: "openhands-research-agent-server:local",
+        OH_CONVERSATION_RUNTIME: "docker",
+        OH_CONVERSATION_CONTAINER_STARTUP_TIMEOUT: "240",
+      },
+      canvasRoot,
+    });
+
+    expect(config.OH_CONVERSATION_CONTAINER_STARTUP_TIMEOUT).toBe("240");
   });
 });

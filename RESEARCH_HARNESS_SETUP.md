@@ -94,6 +94,16 @@ npm run dev:research
 The launcher intentionally fails closed when Docker mode is requested without
 `OH_CONVERSATION_IMAGE`.
 
+The research launcher allows a Docker conversation up to 180 seconds to become
+healthy on its first start. The image includes Chromium and OpenVSCode and can
+need longer than a minimal agent-server image. Override the default only when
+needed with `OH_CONVERSATION_CONTAINER_STARTUP_TIMEOUT`.
+
+Because the image is custom-tagged rather than published under the stock
+OpenHands image name, the launcher also declares that it contains Chromium.
+Override `OH_CONVERSATION_IMAGE_HAS_BROWSER` only for a deliberately minimal
+custom image.
+
 Docker conversations need to call back to the host, so the upstream launcher
 binds the local stack to all host interfaces and deliberately does not embed
 the session key in the page. On the first Canvas screen choose **Local**, use
@@ -106,6 +116,12 @@ credentials are stored by OpenHands and must not be placed in either Git
 repository. Creating a conversation then starts the custom
 `openhands-research-agent-server:local` image with Chromium, OpenVSCode Server,
 terminal/file tools, and the research SDK extension.
+
+ChatGPT subscription login is supported in Docker mode. The runtime mounts only
+OpenHands' managed `~/.openhands/auth` credential directory into each isolated
+conversation; workspace, settings, and other conversation state remain
+separate. Never copy the subscription credential files into a repository or
+container image.
 
 ## Useful overrides
 

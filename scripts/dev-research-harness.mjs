@@ -12,6 +12,7 @@ const REQUIRED_SDK_PACKAGES = [
   "openhands-tools",
   "openhands-workspace",
 ];
+const DEFAULT_DOCKER_STARTUP_TIMEOUT_SECONDS = "180";
 
 export function resolveResearchHarnessConfig({
   env = process.env,
@@ -48,6 +49,15 @@ export function resolveResearchHarnessConfig({
     ...env,
     OH_AGENT_SERVER_LOCAL_PATH: sdkPath,
     OH_CONVERSATION_RUNTIME: runtime,
+    ...(runtime === "docker"
+      ? {
+          OH_CONVERSATION_IMAGE_HAS_BROWSER:
+            env.OH_CONVERSATION_IMAGE_HAS_BROWSER || "true",
+          OH_CONVERSATION_CONTAINER_STARTUP_TIMEOUT:
+            env.OH_CONVERSATION_CONTAINER_STARTUP_TIMEOUT ||
+            DEFAULT_DOCKER_STARTUP_TIMEOUT_SECONDS,
+        }
+      : {}),
     UV_PYTHON: env.UV_PYTHON || "3.12",
     VITE_WORKING_DIR: path.resolve(env.VITE_WORKING_DIR || sdkPath),
   };
