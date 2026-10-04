@@ -63,7 +63,29 @@ with Python 3.14. Set `UV_PYTHON=3.13` explicitly if desired.
 Docker mode must use an Agent Server image built from the research SDK fork;
 using the stock OpenHands image would omit the research package.
 
+Build the image once from the sibling SDK checkout (Apple Silicon):
+
 ```sh
+cd ../openhands-research-harness
+PYTHONPATH="$PWD/openhands-sdk:$PWD/openhands-tools:$PWD/openhands-workspace:$PWD/openhands-agent-server" \
+  ./.venv/bin/python \
+  openhands-agent-server/openhands/agent_server/docker/build.py \
+  --image openhands-research-agent-server \
+  --custom-tags local \
+  --platforms linux/arm64 \
+  --arch arm64 \
+  --load \
+  --sdk-project-root "$PWD"
+
+docker tag \
+  "openhands-research-agent-server:$(git rev-parse --short HEAD)-local-arm64" \
+  openhands-research-agent-server:local
+```
+
+Use `linux/amd64` and `--arch amd64` on an Intel/AMD machine.
+
+```sh
+cd ../openhands-research-canvas
 export OH_CONVERSATION_RUNTIME=docker
 export OH_CONVERSATION_IMAGE=openhands-research-agent-server:local
 npm run dev:research
@@ -71,6 +93,19 @@ npm run dev:research
 
 The launcher intentionally fails closed when Docker mode is requested without
 `OH_CONVERSATION_IMAGE`.
+
+Docker conversations need to call back to the host, so the upstream launcher
+binds the local stack to all host interfaces and deliberately does not embed
+the session key in the page. On the first Canvas screen choose **Local**, use
+the displayed localhost URL, and paste the contents of
+`~/.openhands/agent-canvas/api-key.txt` into **API Key**. This is the local
+Canvas session key, not an LLM provider key. Do not commit or share it.
+
+After the backend connects, add an LLM profile in Canvas settings. Provider
+credentials are stored by OpenHands and must not be placed in either Git
+repository. Creating a conversation then starts the custom
+`openhands-research-agent-server:local` image with Chromium, OpenVSCode Server,
+terminal/file tools, and the research SDK extension.
 
 ## Useful overrides
 
